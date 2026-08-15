@@ -1,7 +1,5 @@
 # Bioinformatics References
 
-Also rendered directly from the `README.md` of [DavidStreid/bfx-references](https://github.com/DavidStreid/bfx-references)
-
 ---
 
 ## Online Bioinformatics Tools
