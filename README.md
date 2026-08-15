@@ -34,6 +34,15 @@ E.g. What are the coordinates of exon 1 on the NM_004009.3 transcript?
 #### Other Helpful Sites
 * [GeneBe](https://genebe.net/gene/hg38/DMD)
 
+## Gene IDs
+
+|  **System**  |     **Example**    |                                           **Notes**                                           |
+|:------------:|:------------------:|:---------------------------------------------------------------------------------------------:|
+| Ensembl gene | ENSG00000012048.23 | IDEAL - Versioned and unique, but not discernible                                             |
+| HGNC symbol  | BRCA1              | DISPLAY-ONLY - Issues: Excel (2020) & non-unique from aliases matching other genes (e.g. TAZ) |
+| OMIM         | 113705             | Disease-oriented; Gene & phenotypes                                                           |
+| HGNC ID      | HGNC:1100          | Ideal ID for HGNC, but not used often                                                         |
+
 ## Notes
 
 [Variant Naming](https://genome.sph.umich.edu/wiki/Variant_Normalization) - left-aligned & parsimonious
