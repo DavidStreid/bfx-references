@@ -43,6 +43,35 @@ E.g. What are the coordinates of exon 1 on the NM_004009.3 transcript?
 | OMIM         | 113705             | Disease-oriented; Gene & phenotypes                                                           |
 | HGNC ID      | HGNC:1100          | Ideal ID for HGNC, but not used often                                                         |
 
+### Issue of HGNC symbol
+* PAR regions (on both chrX & chrY) are often one-to-many HGNC-to-ENSG
+* This one-to-many is found throughout the human genome, specifically 261 human ENSGs map to more than one Entrez GeneID as of Sept, 2026. Examples below w/ how to recreat e this -
+
+
+| ENSG | Entrez GeneIDs → symbols |
+|---|---|
+| `ENSG00000115239` | 51130 → **ASB3** · 100302652 → **GPR75-ASB3** |
+| `ENSG00000120341` | 89866 → **SEC16B** · 111240474 → **CRYZL2P-SEC16B** |
+| `ENSG00000137843` | 56924 → **PAK6** · 106821730 → **BUB1B-PAK6** |
+| `ENSG00000139323` | 282809 → **POC1B** · 133039968 → **POC1B-DUSP6** |
+| `ENSG00000145979` | 51256 → **TBC1D7** · 107080638 → **TBC1D7-LOC100130357** |
+| `ENSG00000152926` | 51351 → **ZNF117** · 109504726 → **ERV3-1-ZNF117** |
+| `ENSG00000158747` | 4681 → **NBL1** · 100532736 → **MICOS10-NBL1** |
+| `ENSG00000163156` | 79005 → **SCNM1** · 100534012 → **TNFAIP8L2-SCNM1** |
+| `ENSG00000178882` | 144347 → **RFLNA** · 100533183 → **ZNF664-RFLNA** |
+| `ENSG00000186184` | 51082 → **POLR1D** · 147380392 → **LOC147380392** |
+| `ENSG00000186448` | 10168 → **ZNF197** · 110354863 → **ZNF660-ZNF197** |
+| `ENSG00000212127` | 50840 → **TAS2R14** · 106707243 → **PRH1-TAS2R14** |
+| `ENSG00000213160` | 151230 → **KLHL23** · 100526832 → **PHOSPHO2-KLHL23** |
+| `ENSG00000213999` | 100271849 → **MEF2B** · 4207 → **BORCS8-MEF2B** |
+| `ENSG00000215440` | 79716 → **NPEPL1** · 124904942 → **LOC124904942** |
+
+```
+curl -O https://ftp.ncbi.nlm.nih.gov/gene/DATA/gene2ensembl.gz
+zcat gene2ensembl.gz | awk -F'\t' '$1==9606{print $3"\t"$2}' | sort -u \
+  | awk -F'\t' '{c[$1]++} END{for(k in c) if(c[k]>1) print c[k]"\t"k}' | sort -rn
+```
+
 ## Notes
 
 [Variant Naming](https://genome.sph.umich.edu/wiki/Variant_Normalization) - left-aligned & parsimonious
