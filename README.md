@@ -33,6 +33,7 @@ E.g. What are the coordinates of exon 1 on the NM_004009.3 transcript?
 
 #### Other Helpful Sites
 * [GeneBe](https://genebe.net/gene/hg38/DMD)
+* [Franklin (Qiagen)](https://franklin.genoox.com/clinical-db/home) - Variant Locator
 
 ## Gene IDs
 
