@@ -37,12 +37,13 @@ E.g. What are the coordinates of exon 1 on the NM_004009.3 transcript?
 
 ## Gene IDs
 
-|  **System**  |     **Example**    |                                           **Notes**                                           |
-|:------------:|:------------------:|:---------------------------------------------------------------------------------------------:|
-| Ensembl gene | ENSG00000012048.23 | IDEAL - Versioned and unique, but not discernible                                             |
-| HGNC symbol  | BRCA1              | DISPLAY-ONLY - Issues: Excel (2020) & non-unique from aliases matching other genes (e.g. TAZ) |
-| OMIM         | 113705             | Disease-oriented; Gene & phenotypes                                                           |
-| HGNC ID      | HGNC:1100          | Ideal ID for HGNC, but not used often                                                         |
+|  **System**    |     **Example**    |                                           **Notes**                                           |
+|----------------|--------------------|-----------------------------------------------------------------------------------------------|
+| Ensembl gene   | ENSG00000012048.23 | IDEAL - Versioned and unique, but not discernible                                             |
+| HGNC symbol    | BRCA1              | DISPLAY-ONLY - Issues: Excel (2020) & non-unique from aliases matching other genes (e.g. TAZ) |
+| OMIM           | 113705             | Disease-oriented; Gene & phenotypes                                                           |
+| HGNC ID        | HGNC:1100          | Ideal ID for HGNC, but not used often                                                         |
+| NCBI/Entrez ID | 7157               | NCBI-maintained & built on RefSeq annotation; used in GO, KEGG, MSigDB, and older resources   |
 
 ### Issue of HGNC symbol
 * PAR regions (on both chrX & chrY) are often one-to-many HGNC-to-ENSG
