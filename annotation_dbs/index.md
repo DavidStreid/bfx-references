@@ -12,11 +12,18 @@ draft: false
 # Gene Databases
 
 ## Gene Ontology (GO)
-- **What:** Controlled vocabulary of gene function across three aspects: Molecular Function, Biological Process, Cellular Component
+- **What:** Shared vocabulary to describe gene functions. It's organized into three aspects - Molecular Function (MF), Cellular Component (CC), and Biological Process (BP)
+  - GO ontology is organized in DAG hierarchy like below, which shows a biological process for "hexose biosynthetic process"
+  - Go Annotations provide relations between genes
 - **Link:** https://geneontology.org
 - **Access:** Free, CC BY 4.0
   - Ontology: `go-basic.obo` from https://current.geneontology.org/ontology/
   - Annotations: GAF files per species from https://current.geneontology.org/annotations/
+- **Example**: [hexose biosynthetic process, GO:0019319](https://www.ebi.ac.uk/QuickGO/term/GO:0019319)
+
+![GO DAG for hexose biosynthetic process](https://geneontology.org/assets/hexose-biosynthetic-process.png)
+
+*Source: [Gene Ontology documentation](https://geneontology.org/docs/ontology-documentation/)*
 
 ## OMIM
 - **What:** Catalog of human genes and genetic phenotypes
