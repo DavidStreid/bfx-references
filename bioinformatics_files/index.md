@@ -5,6 +5,7 @@
 **Features**
 
 * Binary, columnar, and index file
+* Supports data streaming, as opposed to in-memory (like `pandas`), which loads the entire file into memory before processing
 * Most metadata is maintained in a footer
   * Allows for one-time pass through b/c extra data can be appended
   * Allows constant time for reading metadata by reading the end of the file
