@@ -70,3 +70,18 @@ chr1	10146	.	A	T	.	PASS	AF=0.051
 chr1	10352	.	T	TA	.	PASS	AF=0.120
 chr2	11024	.	C	T	.	PASS	AF=0.210
 ```
+
+## GWAS
+
+Most importantly, genes and their p-values. Where the p-value is the likelihood of observing the given signal linking the gene to the condition given the null hypothesis that none of the gene's variants have any relationship to the condition. Note: confounders like gene size
+* Formats:
+  * MAGMA
+  * VEGAS, e.g. [BMI condition](https://s3-us-west-2.amazonaws.com/humanbase/netwas/examples/bmi-vegas.txt)
+
+Example VEGAS
+```
+Chr	Gene	nSNPs	nSims	Start	Stop	TestStat	Pvalue
+10	A1CF	90	1000	52236330	52315441	145.339170015442	0.155
+10	ABCC2	99	1000	101532452	101601652	39.7805508425323	0.886
+...
+```
