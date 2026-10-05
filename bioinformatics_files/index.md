@@ -85,3 +85,25 @@ Chr	Gene	nSNPs	nSims	Start	Stop	TestStat	Pvalue
 10	ABCC2	99	1000	101532452	101601652	39.7805508425323	0.886
 ...
 ```
+
+## DOCKER
+
+### Docker cleanup
+
+Delete stopped containers (leaves tagged images and build caches)
+```
+docker container prune
+```
+
+Delete cached layers (leaves containers and images)
+```
+# Removes: Cached BuildKit build stages
+# Leaves: Containers, images, volumes, networks
+# next `docker build` will need to rebuild the cached layers
+docker builder prune -a
+```
+
+Nuclear Option - delete everything not attached to currently running container
+```
+docker system prune -a --volumes
+```
