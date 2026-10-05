@@ -35,6 +35,24 @@ $ duckdb -c "SELECT * FROM 'variants.parquet' WHERE AF > 0.10;"
 └─────────┴───────┴─────────┴─────────┴────────┘
 ```
 
+R/W with parquet
+```
+def my_func(chrom, pos, ref):
+    return f"{chrom}:{pos}:{ref}:{'common' if pos < 11000 else 'other'}"
+ 
+src = pq.ParquetFile("variants.parquet")
+tmp = "variants.annotated.parquet.tmp"
+out_path = "variants.annotated.parquet"
+writer = pq.ParquetWriter(tmp, out.schema, compression="zstd")
+for batch in src.iter_batches(batch_size=10_000):
+    t = pa.Table.from_batches([batch])
+    vals = [my_func(c, p, r)
+            for c, p, r in zip(t["chrom"].to_pylist(), t["Pos"].to_pylist(), t["Ref"].to_pylist())]
+    out = t.append_column("annotation", pa.array(vals))
+    writer.write_table(out)
+writer.close()
+```
+
 ## Genome Ordered Relations (GOR)
 
 * GOR is a genomic-ordered relational database architecture including GORpipe and query language, but can also refer to,
