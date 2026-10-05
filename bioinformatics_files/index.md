@@ -14,7 +14,7 @@
 **Advantages**
 
 - Massively reduced storage compared to simple columnar file formats (e.g. TSV, CSV)
-
+- Excels in high-read use cases
 
 **Example**
 
