@@ -104,7 +104,31 @@ Chr	Gene	nSNPs	nSims	Start	Stop	TestStat	Pvalue
 ...
 ```
 
-## DOCKER
+## DockerFile
+
+### Deployment
+
+**Build with docker, load with podman** - podman has rootless mode, which allows running containers w/o root privileges
+
+1. Build
+ * e.g. building a linux image on macOS
+```
+docker build --platform=linux/amd64 -t "my_image:latest" .  2>&1 | tee log.my_image.latest.out
+```
+
+2. Save Image Build Artefact
+```
+$ docker image ls
+REPOSITORY      TAG       IMAGE ID       CREATED        SIZE
+my_image   latest    ef54992g4h38   16 hours ago   4.4GB
+$ docker save -o my_image.latest.tar my_image:latest
+$ rsync -azvP my_image.latest.tar <TARGET_HOST>:<PATH>
+```
+
+3. Load Image on target host
+```
+podman load -i <PATH>/my_image.latest.tar
+```
 
 ### Docker cleanup
 
