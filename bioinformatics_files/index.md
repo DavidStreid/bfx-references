@@ -8,6 +8,8 @@
 | **hs37-1kg** (`human_g1k_v37`) | 1000 Genomes Project | Assembly: Feb 2009 | b37 | Chromosomes `1`–`22`, `X`, `Y` from Ensembl; `MT` is rCRS. Unlocalized and unplaced contigs named by accession (e.g. `GL000191.1`, `GL000211.1`). No alternate loci |
 | **hs37d5** | 1000 Genomes Project (Phase II) | Assembly: Feb 2009; README dated 2011-07-07 (from file name, unverified) | hs37-1kg plus decoy sequence (basis listed as GRCh37.p4 in your notes, unverified) | Same naming as hs37-1kg. Decoy sequence (BAC/fosmid clones, HuRef contigs, Epstein-Barr virus genome) reduces false-positive mappings |
 | **GRCh38 (hg38)** | Genome Reference Consortium | Dec 2013 | Updated assembly replacing GRCh37 | Depends on distributor: GRC/EBI `1`; UCSC `chr1`; NCBI `NC_000001.11`. `hg38` is UCSC's ID for this build. ALT configs added in patches |
+| **T2T-CHM13** | Telomere-to-Telomere (T2T) Consortium | 2022 | First gapless human assembly. Built from a single haploid cell line (CHM13); chrY is added from another individual (unverified). A single linear reference, not a pangenome | UCSC calls it `hs1` and uses `chr1`, `chrM`. NCBI accession `GCA_009914755.4` |
+| **HPRC pangenome** | Human Pangenome Reference Consortium | 2023-current| Many haplotype-resolved assemblies from diverse individuals, linked as a graph. Intended as a replacement for the single linear reference. GRCh38 and T2T-CHM13 serve as linear backbones (unverified) | No single coordinate system or naming scheme. Each haplotype contig is named per sample and haplotype (e.g. the PanSN convention `sample#haplotype#contig`, unverified). No UCSC `hg` ID |
 
 ## Parquet
 
