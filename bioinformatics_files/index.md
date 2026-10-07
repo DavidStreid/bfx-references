@@ -1,4 +1,13 @@
+## Reference Genome Assemblies
 
+| Build | Institution | Date | Basis | Naming |
+|---|---|---|---|---|
+| **GRCh37** | Genome Reference Consortium | Feb 2009 (final patch, p13, in 2013) | Primary reference that other builds derive from | No `chr`; mitochondria `MT` (rCRS). Accession style `NC_000001.10`. File name: `GRCh37.p13.genome.fasta` |
+| **hg19** | UCSC | Feb 2009 | Derived from GRCh37, but not identical: `chrM` is the older Cambridge sequence (`NC_001807`), not rCRS. Only the nuclear chromosomes are equivalent | `chr` prefix; mitochondria `chrM`. File name: `ucsc.hg19.fasta` |
+| **b37** | Broad Institute | Feb 2009 (assembly) | Repackaged GRCh37. Nuclear chromosomes match hg19's sequence; the difference is contig naming | No `chr`; mitochondria `MT`. File name: `Homo_sapiens_assembly19.fasta` |
+| **hs37-1kg** (`human_g1k_v37`) | 1000 Genomes Project | Assembly: Feb 2009 | b37 | Chromosomes `1`–`22`, `X`, `Y` from Ensembl; `MT` is rCRS. Unlocalized and unplaced contigs named by accession (e.g. `GL000191.1`, `GL000211.1`). No alternate loci |
+| **hs37d5** | 1000 Genomes Project (Phase II) | Assembly: Feb 2009; README dated 2011-07-07 (from file name, unverified) | hs37-1kg plus decoy sequence (basis listed as GRCh37.p4 in your notes, unverified) | Same naming as hs37-1kg. Decoy sequence (BAC/fosmid clones, HuRef contigs, Epstein-Barr virus genome) reduces false-positive mappings |
+| **GRCh38 (hg38)** | Genome Reference Consortium | Dec 2013 | Updated assembly replacing GRCh37 | Depends on distributor: GRC/EBI `1`; UCSC `chr1`; NCBI `NC_000001.11`. `hg38` is UCSC's ID for this build. ALT configs added in patches |
 
 ## Parquet
 
