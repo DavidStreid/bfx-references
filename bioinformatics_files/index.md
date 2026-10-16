@@ -119,12 +119,14 @@ Chr	Gene	nSNPs	nSims	Start	Stop	TestStat	Pvalue
 
 ### Deployment
 
-**Build with docker, load with podman** - podman has rootless mode, which allows running containers w/o root privileges
+Can build with either docker or podman (rootless mode)
 
 1. Build
  * e.g. building a linux image on macOS
 ```
-docker build --platform=linux/amd64 -t "my_image:latest" .  2>&1 | tee log.my_image.latest.out
+# docker is the same, just substitute podman for docker
+podman build --platform=linux/amd64 -t "my_image:latest" .  2>&1 | tee log.my_image.latest.out
+podman run --rm -it my_image:latest
 ```
 
 2. Save Image Build Artefact
@@ -139,6 +141,17 @@ $ rsync -azvP my_image.latest.tar <TARGET_HOST>:<PATH>
 3. Load Image on target host
 ```
 podman load -i <PATH>/my_image.latest.tar
+```
+
+### Podman Notes
+
+* podman provisions a lightweight, headless Linux VM - podman commands run in host terminal are forwarded by the CLIover an SSH Unix socket to the Podman daemon inside that VM
+* Sibling containers can be run by creating a socket that allows processes running inside container to make API calls to host container engine
+* CLI-first approach, but does provide [podman desktop](https://podman-desktop.io/downloads), which is similar to Docker Desktop
+
+```
+systemctl --user enable --now podman.socket
+ls -l "/run/user/$(id -u)/podman/podman.sock"
 ```
 
 ### Docker cleanup
