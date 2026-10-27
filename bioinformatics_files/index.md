@@ -115,9 +115,70 @@ Chr	Gene	nSNPs	nSims	Start	Stop	TestStat	Pvalue
 ...
 ```
 
-## DockerFile
+## Containerization
 
-### Deployment
+### Development
+
+#### **[Multi-Stage Builds](https://docs.docker.com/build/building/multi-stage/)**
+
+**Definition**: Mutliple `FROM` **and** `COPY` instructions to take only what is needed. This powerfully provides selected functionality without the additional steps
+
+Key Optimizations
+* Order is important - subsequent layers depend on previous layers
+* As much as possible, put frequently changed layers in the final layers
+* Optimize for deployment by putting the large-file base installations early on in the build. This allows the lighter layers to quickly be deployed
+
+
+**Example:** Multi-Stage Build creating a container of bioinformatics tools and the app that uses them
+* Pruned to only keep what is needed via `FROM...COPY` syntax
+* Large base installations provide the foundation
+
+**DOCKER FILES**
+
+`Dockerfile.base` - installs the shared runtime library (`libhts3`) required for `samtools`
+
+```
+FROM ubuntu:22.04
+RUN apt-get update && apt-get install -y libhts3
+```
+
+`Dockerfile.tools` - installs `samtools` AND prunes image with `FROM... runner; COPY ...` syntax, i.e. `libhts3` will NOT be in the final image
+
+```
+# Install `samtools`
+FROM my-base:v1.0 AS builder
+RUN apt-get update && apt-get install -y gcc make libhts-dev curl
+RUN curl -O https://.../samtools-1.20.tar.bz2 && tar -xjf ...
+WORKDIR /samtools-1.20
+RUN ./configure --prefix=/opt/samtools && make && make install
+
+# Clean slate w/ `FROM` and then copy just `samtools`
+FROM my-base:v1.0 AS runner
+COPY --from=builder /opt/samtools /opt/samtools
+ENV PATH="/opt/samtools/bin:${PATH}"
+```
+
+`Dockerfile.app`
+```
+FROM my-tools:v1.0
+
+WORKDIR /app
+COPY run_pipeline.sh .
+
+CMD ["/bin/bash", "run_pipeline.sh"]
+```
+
+**BUILD STEPS**
+
+```
+podman build -f Dockerfile.base  -t my-base:v1.0 .
+podman build -f Dockerfile.tools -t my-tools:v1.0 .
+podman build -f Dockerfile.app   -t my-app:v1.0 .
+```
+
+### DockerFile
+
+#### Deployment
 
 Can build with either docker or podman (rootless mode)
 
@@ -143,7 +204,7 @@ $ rsync -azvP my_image.latest.tar <TARGET_HOST>:<PATH>
 podman load -i <PATH>/my_image.latest.tar
 ```
 
-### Podman Notes
+#### Podman Notes
 
 * podman provisions a lightweight, headless Linux VM - podman commands run in host terminal are forwarded by the CLIover an SSH Unix socket to the Podman daemon inside that VM
 * Sibling containers can be run by creating a socket that allows processes running inside container to make API calls to host container engine
@@ -154,7 +215,7 @@ systemctl --user enable --now podman.socket
 ls -l "/run/user/$(id -u)/podman/podman.sock"
 ```
 
-### Docker cleanup
+#### Docker cleanup
 
 Delete stopped containers (leaves tagged images and build caches)
 ```
