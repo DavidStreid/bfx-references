@@ -215,26 +215,25 @@ find . -maxdepth 1 ! -name 'bwa-mem2*' ! -name '.' -exec rm -rf {} +
 
 Can build with either docker or podman (rootless mode)
 
+**COMMANDS** - `docker` is the same, just substitute it for `podman` below
+
 1. Build
  * e.g. building a linux image on macOS
 ```
-# docker is the same, just substitute podman for docker
 podman build --platform=linux/amd64 -t "my_image:latest" .  2>&1 | tee log.my_image.latest.out
-podman run --rm -it my_image:latest
+# podman run --rm -it my_image:latest # Optional: Manual Verification
 ```
 
-2. Save Image Build Artefact
+2. Save
 ```
-$ docker image ls
-REPOSITORY      TAG       IMAGE ID       CREATED        SIZE
-my_image   latest    ef54992g4h38   16 hours ago   4.4GB
-$ docker save -o my_image.latest.tar my_image:latest
-$ rsync -azvP my_image.latest.tar <TARGET_HOST>:<PATH>
+podman save my_image:latest | gzip > my_image.latest.tar.gz # or, pigz
 ```
 
-3. Load Image on target host
+3. Transfer to other host
+
+4. Load
 ```
-podman load -i <PATH>/my_image.latest.tar
+podman load -i /path/to/destination/my_image.latest.tar.gz 
 ```
 
 #### Podman Notes
