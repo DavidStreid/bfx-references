@@ -176,6 +176,39 @@ podman build -f Dockerfile.tools -t my-tools:v1.0 .
 podman build -f Dockerfile.app   -t my-app:v1.0 .
 ```
 
+#### Pruning
+
+To reduce size of the final image, it may help to cleanup any unused C source, headers, objects, and static archive.
+
+Consider the example below where the final image size is cut in half by removing no-longer required libraries, code, and other files.
+
+`Dockerfile` - would call this script to build bwamem-2
+```
+RUN install_bwamem2.sh
+```
+
+`install_bwamem2.sh` - Final executable size is reduced by >50% by removing static libraries, raw code, and intermediate object files
+```
+git clone --recurse-submodules --branch "v2.2.1" --depth 1 \
+  https://github.com/bwa-mem2/bwa-mem2.git "bwa-mem2-2.2.1"
+cd bwa-mem2-2.2.1
+# 3.2M
+
+make -j"$(nproc)" # `-j`, processes w/ number of processing units available, e.g. `-j20`
+# 22M
+
+# RETAIN ONLY REQUIRED - all sibling dispatcher binaries (bwa-mem2, bwa-mem2.avx2, etc.)
+# Below are removed files that are no longer needed
+#  - Static Library Archive     - compiled object files that are deadweight one the standalone bwa executable is created e.g. `libbwa.a`
+#  - C Source Code/Header Files - raw code files
+#  - Object Files               - intermediate machine-code files
+find . -maxdepth 1 ! -name 'bwa-mem2*' ! -name '.' -exec rm -rf {} +
+# 10M
+
+# SANITY CHECK - cleanup didn't affect anything
+./bwa-mem2 version 2>&1 | grep "${VERSION#v}"
+```
+
 ### DockerFile
 
 #### Deployment
