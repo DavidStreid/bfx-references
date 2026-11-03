@@ -209,6 +209,10 @@ find . -maxdepth 1 ! -name 'bwa-mem2*' ! -name '.' -exec rm -rf {} +
 ./bwa-mem2 version 2>&1 | grep "${VERSION#v}"
 ```
 
+**Other Container Build Size Optimizations**
+
+* `pip install --no-cache-dir` - instructs pip not to save copies of the downloaded `.whl` or `.tar.gz` files into pip's cache directory
+
 ### DockerFile
 
 #### Deployment
