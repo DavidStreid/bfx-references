@@ -251,6 +251,63 @@ systemctl --user enable --now podman.socket
 ls -l "/run/user/$(id -u)/podman/podman.sock"
 ```
 
+**TroubleShooting**
+
+_User Namespaces_
+
+More than once, I've run into an issue with User Namespaces, which is where podman maps system UIDs and GIDs into a container. 
+
+* Podman avoids root privilege issues by running the unprivileged host user, i.e. whoever is running the container (e.g. `my_user` with UID `1001`), and mapping that to UID `0`, or root, inside the container.
+* Packages expecting to be installed as root inside the container think they are and can.
+* Outside on the host however, the kernel still treats the user as unprivileged, i.e. the `my_user` with UID `1001`, and never grants it root privileges.
+
+For instance, see the translation table for the provided `/etc/subuid`
+
+```
+$ cat /etc/subuid
+my_user:100000:65536
+```
+
+| Container     | Host                                 | Where It Comes From                         |
+|:--------------|:-------------------------------------|:--------------------------------------------|
+| UID 0 (root)  | Host UID of my_user (e.g., 1001)     | Your real login UID                         |
+| UID 1         | UID 100000                           | Subordinate range start                     |
+| UID 2         | UID 100001                           | Subordinate range offset (100000 + 2 - 1)   |
+| ...           | ...                                  | ...                                         |
+| UID 1000      | UID 100999                           | Subordinate range offset (100000 + 1000 - 1)|
+| ...           | ...                                  | ...                                         |
+| UID 65536     | UID 165535                           | Subordinate range end (100000 + 65536 - 1)  |
+
+In this example `my_user` will only have a limited set of unused host IDs - 
+
+* Container UID 0 maps to host UID testuser (e.g., 1001).
+* Container UIDs 1 through 65,536 map to host subordinate UIDs 100000 through 165535.
+
+When pulling the `clair3` docker image [See instructions](https://github.com/HKU-BAL/clair3#option-1-docker), 
+
+there is an error because the container files inside `/opt/models/hifi` have an internal user account with UID 1000088, which is outside the range of host subordinate UIDs available to the user
+```
+podman run --rm docker.io/hkubal/clair3:v1.0.10 /bin/true
+# "Error: writing blob" - processing tar file(potentially insufficient UIDs or GIDs available in user namespace (requested 1000088:100 for /opt/models/hifi): Check /etc/subuid and /etc/subgid if configured locally and run "podman system migrate": lchown /opt/models/hifi: invalid argument): exit status 1
+```
+
+To address this, 
+
+either **Update** - `/etc/subuid` to include more (below, 2_000_000 are provided)
+
+```
+# Update /etc/subuid
+sudo sed -i 's/^my_user:.*/my_user:100000:2000000/' /etc/subuid
+podman system migrate
+```
+
+or **Squash** ownership by pulling with `--storage-opt ignore_chown_errors=true` 
+* istructs Podman's storage driver to catch that failure, ignore it, and squash the ownership of those files down to your user
+
+```
+podman --storage-opt ignore_chown_errors=true pull docker.io/hkubal/clair3:v1.0.10
+```
+
 #### Docker cleanup
 
 Delete stopped containers (leaves tagged images and build caches)
