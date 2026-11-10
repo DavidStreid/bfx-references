@@ -243,15 +243,37 @@ podman load -i /path/to/destination/my_image.latest.tar.gz
 #### Podman Notes
 
 * podman provisions a lightweight, headless Linux VM - podman commands run in host terminal are forwarded by the CLIover an SSH Unix socket to the Podman daemon inside that VM
-* Sibling containers can be run by creating a socket that allows processes running inside container to make API calls to host container engine
 * CLI-first approach, but does provide [podman desktop](https://podman-desktop.io/downloads), which is similar to Docker Desktop
 
+
+##### Sibling Containers
+
+Sibling containers can be run by creating a socket that allows processes running inside container to make API calls to host container engine. This is done via [domain sockets](https://www.lenovo.com/us/en/glossary/unix-domain-socket/?orgRef=https%253A%252F%252Fwww.google.com%252F&srsltid=AYCX9vLwcOKruDRNKP5dlkL0EvrgmXdKpP5hUtLkTpQlbb7Q8BQ4X6hk), "an interprocess communication (IPC) mechanism"
+
+**1. Create Socket**
 ```
 systemctl --user enable --now podman.socket
 ls -l "/run/user/$(id -u)/podman/podman.sock"
 ```
 
-**TroubleShooting**
+**2. Integrate Socket**
+
+* Set the `CONTAINER_HOST`, a built-in environment variable for podman, to the socket created
+* This will delegate all container operations inside pv3 directly to the host's daemon
+
+When `podman` runs INSIDE the container, it will inspect the environment for `CONTAINER_HOST` - 
+
+* If `CONTAINER_HOST` is defined, podman will run as `podman --remote --url unix:///run/podman/podman.sock run...`
+* This is basically an API request to run the `podman` command on the `url` provided, i.e. the host machine
+
+```
+podman run --rm \
+  -v /run/user/$(id -u)/podman/podman.sock:/run/podman/podman.sock:Z \ 
+  -e CONTAINER_HOST=unix:///run/podman/podman.sock \
+  my_image:latest echo "it works!"
+```
+
+##### General TroubleShooting
 
 _User Namespaces_
 
