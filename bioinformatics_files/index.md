@@ -330,6 +330,21 @@ or **Squash** ownership by pulling with `--storage-opt ignore_chown_errors=true`
 podman --storage-opt ignore_chown_errors=true pull docker.io/hkubal/clair3:v1.0.10
 ```
 
+#### Podman Cleanup
+
+**Dangling Images** - images without a tag pointing to them from either updating or pulling an image. For instance, re-running `podman build ... -t "tools:v1" .` and then updating the tag to `v2`.
+
+```
+podman image prune
+```
+
+**Targeted repo removal**
+
+```
+REPO="tools"
+podman rmi $(podman images -q ${REPO}) # -q will get the image IDs for all REPO images
+```
+
 #### Docker cleanup
 
 Delete stopped containers (leaves tagged images and build caches)
